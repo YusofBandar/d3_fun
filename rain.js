@@ -1,4 +1,4 @@
-let wind = 10;
+
 
 function renderRain(amount = 500, options = {}) {
 
@@ -15,39 +15,62 @@ function renderRain(amount = 500, options = {}) {
         let dX = d3.event.x;
         let dY = d3.event.y;
 
-        let width = Number(d3.select(this).attr('width'));
-        let height = Number(d3.select(this).attr('height'));
+        let width = Number(d3.select(this).attr("width"));
+        let height = Number(d3.select(this).attr("height"));
 
-        console.log(dX+width);
+        if (dX + (width / 2) > w) {
+            dX = w - (width / 2);
+        } else if (dX - (width / 2) < 0) {
+            dX = width / 2;
+        }
 
-        if(dX + (width/2) > w){dX = w-(width/2);}
-        else if(dX-(width/2) < 0){dX = width/2;}
 
+        if (dY + (height / 2) > h) {
+            dY = h - (height / 2);
+        } else if (dY - (height / 2) < 0) {
+            dY = height / 2;
+        }
 
-        if(dY + (height/2) > h){dY = h-(height/2);}
-        else if(dY-(height/2) < 0){dY = height/2;}
-
-        d3.select(this).attr('x', dX - width / 2)
-            .attr('y', dY - height / 2);
+        d3.select(this).attr("x", dX - width / 2)
+            .attr("y", dY - height / 2);
     }
 
 
+    let container = d3.select("body").append("div").attr('class', 'rain');
 
+    container
+        .append("div")
+        .attr("id", "wind")
+        .append("input")
+        .attr("class", "slider")
+        .attr("id", "windSlider")
+        .attr("type", "range")
+        .attr("min", -20)
+        .attr("max", 20)
+        .attr("value", 0)
 
+    let windSlider = document.getElementById("windSlider");
+    let wind = Number(windSlider.value);
 
-    let svg = d3.select("body").append("svg")
+    windSlider.oninput = function () {
+        wind = Number(windSlider.value);
+    }
+
+    let svg = container
+        .append("svg")
         .attr("class", "rainCanvas")
         .attr("width", w)
         .attr("height", h);
 
+
     let rectWidth = 200;
     let rectHeight = 100;
 
-    let rect = svg.append('rect')
-        .attr('x', (w / 2) - (rectWidth / 2))
-        .attr('y', h - rectHeight)
-        .attr('width', rectWidth)
-        .attr('height', rectHeight)
+    let rect = svg.append("rect")
+        .attr("x", (w / 2) - (rectWidth / 2))
+        .attr("y", h - rectHeight)
+        .attr("width", rectWidth)
+        .attr("height", rectHeight)
         .call(drag)
 
 
@@ -64,7 +87,7 @@ function renderRain(amount = 500, options = {}) {
             }
         }))
         .enter().append("line")
-        .attr('class', 'raindrop')
+        .attr("class", "raindrop")
         .attr("x1", function (d) {
             return d.x;
         })
@@ -105,13 +128,13 @@ function renderRain(amount = 500, options = {}) {
             }).attr("visibility", function (d) {
 
                 if (d.hidden) {
-                    return 'hidden';
+                    return "hidden";
                 }
 
-                if (d.x >= Number(rect.attr('x')) && d.x <= (Number(rect.attr('x')) + Number(rect.attr('width')))) {
-                    if (d.y >= Number(rect.attr('y')) && d.y <= (Number(rect.attr('y')) + Number(rect.attr('height')))) {
+                if (d.x >= Number(rect.attr("x")) && d.x <= (Number(rect.attr("x")) + Number(rect.attr("width")))) {
+                    if (d.y >= Number(rect.attr('y')) && d.y <= (Number(rect.attr("y")) + Number(rect.attr("height")))) {
                         d.hidden = true;
-                        return 'hidden';
+                        return "hidden";
                     }
 
                 }
@@ -125,11 +148,11 @@ function defaultRainOptions(options) {
     const MINLENGTH = 5,
         MAXLENGTH = 20;
 
-    if (!('minLength' in options)) {
+    if (!("minLength" in options)) {
         options.minLength = MINLENGTH;
     }
 
-    if (!('maxLength' in options)) {
+    if (!("maxLength" in options)) {
         options.maxLength = MAXLENGTH;
     }
 
