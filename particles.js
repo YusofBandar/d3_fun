@@ -1,3 +1,5 @@
+
+
 function renderParticles(amount = 500, options = {}) {
 
     options = defaultOptions(options);
@@ -28,6 +30,8 @@ function renderParticles(amount = 500, options = {}) {
 
 
     d3.timer(function () {
+        
+
         // Update the circle positions.
         particles
             .attr("cx", function (d) {
@@ -43,12 +47,18 @@ function renderParticles(amount = 500, options = {}) {
                 return d.y;
             });
 
+
         svg.selectAll("line").remove()
+        let count = 0;
+        let lines = 0;
         particles.each(function (p1, p1Index) {
+            count ++;
             particles.each(function (p2, p2Index) {
-                
+                if(p2Index < count){
+                    return
+                }
                 if (distance(p1.x, p1.y,p2.x, p2.y) < options.maxDistance) {
-                    
+                    lines ++;
                     svg.append("line")
                         .attr("x1", p1.x)
                         .attr("y1", p1.y)
@@ -58,8 +68,13 @@ function renderParticles(amount = 500, options = {}) {
                 }
             })
         })
+
+        console.log(lines)
+        
     });
 }
+
+
 
 
 
