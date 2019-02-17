@@ -1,3 +1,6 @@
+
+let wind = 10;
+
 function renderRain(amount = 500, options = {}) {
 
     options = defaultRainOptions(options);
@@ -58,7 +61,7 @@ function renderRain(amount = 500, options = {}) {
             return d.y;
         })
         .attr("x2", function (d) {
-            return d.x + d.length;
+            return d.x + wind;
         })
         .attr("y2", function (d) {
             return d.y + d.length;
@@ -69,7 +72,7 @@ function renderRain(amount = 500, options = {}) {
     d3.timer(function () {
         raindrops
             .attr("x1", function (d) {
-                d.x += d.d;
+                d.x += wind;
                 if (d.x > w) {
                     d.hidden = false;
                     d.x -= w;
@@ -84,7 +87,7 @@ function renderRain(amount = 500, options = {}) {
                 }
                 return d.y;
             }).attr("x2", function (d) {
-                return d.x + d.length;
+                return d.x + wind;
             })
             .attr("y2", function (d) {
                 return d.y + d.length;
@@ -103,8 +106,6 @@ function renderRain(amount = 500, options = {}) {
                 }
             });
     })
-
-
 }
 
 
