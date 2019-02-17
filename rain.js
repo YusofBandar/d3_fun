@@ -1,9 +1,22 @@
 function renderRain(amount = 500, options = {}) {
 
     options = defaultRainOptions(options);
-    
 
-    let drag = d3.drag();
+
+    let drag = d3.drag().on("drag", dragMovement);
+
+    function dragMovement(d) {
+        let dX = d3.event.x;
+        let dY = d3.event.y;
+
+        let width = d3.select(this).attr('width');
+        let height = d3.select(this).attr('height');
+
+        d3.select(this).attr('x', dX-width/2)
+            .attr('y', dY-height/2);
+    }
+
+
 
     let w = 960,
         h = 500;
@@ -17,11 +30,12 @@ function renderRain(amount = 500, options = {}) {
     let rectHeight = 100;
 
     let rect = svg.append('rect')
-        .attr('x',(w/2)-(rectWidth/2))
-        .attr('y',h-rectHeight)
-        .attr('width',rectWidth)
-        .attr('height',rectHeight)
-        
+        .attr('x', (w / 2) - (rectWidth / 2))
+        .attr('y', h - rectHeight)
+        .attr('width', rectWidth)
+        .attr('height', rectHeight)
+        .call(drag)
+
 
     let raindrops = svg.selectAll("circle")
         .data(d3.range(amount).map(function () {
