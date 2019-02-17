@@ -1,4 +1,7 @@
-function renderParticles() {
+function renderParticles(amount = 500, options = {}) {
+
+    options = defaultOptions(options);
+
     let w = 960,
         h = 500;
 
@@ -7,16 +10,19 @@ function renderParticles() {
         .attr("height", h);
 
     let particles = svg.selectAll("circle")
-        .data(d3.range(1000).map(function () {
+        .data(d3.range(amount).map(function () {
             return {
                 x: w * Math.random(),
                 y: h * Math.random(),
+                r : getRandomArbitrary(options.minSize,options.maxSize),
                 dx: Math.random(),
                 dy: Math.random()
             };
         }))
         .enter().append("circle")
-        .attr("r", 2.5);
+        .attr("r",function(d){
+            return d.r;
+        });
 
 
     d3.timer(function () {
@@ -37,5 +43,35 @@ function renderParticles() {
     });
 }
 
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 
-renderParticles();
+function defaultOptions(options) {
+    const MINSIZE = 1,
+        MAXSIZE = 10;
+
+    const MINSPEED = 10,
+        MAXSPEED = 100;
+
+    if (!('minSize' in options)) {
+        options.minSize = MINSIZE;
+    }
+
+    if (!('maxSize' in options)) {
+        options.maxSize = MAXSIZE;
+    }
+
+    if (!('minSpeed' in options)) {
+        options.minSpeed = MINSPEED;
+    }
+
+    if (!('maxSpeed' in options)) {
+        options.maxSpeed = MAXSPEED;
+    }
+
+    return options;
+}
+
+
+renderParticles(50);
