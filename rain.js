@@ -10,11 +10,12 @@ function renderRain(amount = 500, options = {}) {
         .attr("width", w)
         .attr("height", h);
 
-    let particles = svg.selectAll("circle")
+    let raindrops = svg.selectAll("circle")
         .data(d3.range(amount).map(function () {
             return {
                 x: w * Math.random(),
                 y: h * Math.random(),
+                d: Math.random(),
                 length: 10
             }
         }))
@@ -35,6 +36,26 @@ function renderRain(amount = 500, options = {}) {
 
 
 
+    d3.timer(function () {
+        raindrops
+            .attr("x1", function (d) {
+                d.x += d.d;
+                if (d.x > w) d.x -= w;
+                else if (d.x < 0) d.x += w;
+                return d.x;
+            })
+            .attr("y1", function (d) {
+                d.y += d.d;
+                if (d.y > h) d.y -= h;
+                else if (d.y < 0) d.y += h;
+                return d.y;
+            }).attr("x2", function (d) {
+                return d.x + d.length;
+            })
+            .attr("y2", function (d) {
+                return d.y + d.length;
+            });
+    })
 
 
 }
