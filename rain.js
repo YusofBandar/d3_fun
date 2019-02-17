@@ -74,11 +74,11 @@ function defaultOptions(options) {
     const MINSPEED = 1,
         MAXSPEED = 5;
 
-    if (!('minSize' in options)) {
+    if (!('minlength' in options)) {
         options.minSize = MINSIZE;
     }
 
-    if (!('maxSize' in options)) {
+    if (!('maxlength' in options)) {
         options.maxSize = MAXSIZE;
     }
 
