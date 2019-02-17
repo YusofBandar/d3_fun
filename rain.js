@@ -12,8 +12,8 @@ function renderRain(amount = 500, options = {}) {
         let width = d3.select(this).attr('width');
         let height = d3.select(this).attr('height');
 
-        d3.select(this).attr('x', dX-width/2)
-            .attr('y', dY-height/2);
+        d3.select(this).attr('x', dX - width / 2)
+            .attr('y', dY - height / 2);
     }
 
 
@@ -44,6 +44,7 @@ function renderRain(amount = 500, options = {}) {
                 x: w * Math.random(),
                 y: h * Math.random(),
                 d: length * 0.3,
+                hidden :false,
                 length
             }
         }))
@@ -68,20 +69,43 @@ function renderRain(amount = 500, options = {}) {
         raindrops
             .attr("x1", function (d) {
                 d.x += d.d;
-                if (d.x > w) d.x -= w;
-                else if (d.x < 0) d.x += w;
+                if (d.x > w) {
+                    d.hidden = false;
+                    d.x -= w;
+                } else if (d.x < 0) {
+                    d.hidden = false;
+                    d.x += w;
+                }
                 return d.x;
             })
             .attr("y1", function (d) {
                 d.y += d.d;
-                if (d.y > h) d.y -= h;
-                else if (d.y < 0) d.y += h;
+                if (d.y > h) {
+                    d.hidden = false;
+                    d.y -= h;
+                } else if (d.y < 0) {
+                    d.hidden = false;
+                    d.y += h;
+                }
                 return d.y;
             }).attr("x2", function (d) {
                 return d.x + d.length;
             })
             .attr("y2", function (d) {
                 return d.y + d.length;
+            }).attr("visibility", function (d) {
+
+                if (d.hidden) {
+                    return 'hidden';
+                }
+
+                if (d.x >= Number(rect.attr('x')) && d.x <= (Number(rect.attr('x')) + Number(rect.attr('width')))) {
+                    if (d.y >= Number(rect.attr('y')) && d.y <= (Number(rect.attr('y')) + Number(rect.attr('height')))) {
+                        d.hidden = true;
+                        return 'hidden';
+                    }
+
+                }
             });
     })
 
