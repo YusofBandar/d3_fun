@@ -23,3 +23,8 @@
 .particle{
     fill: #0e623e72;
 }
+
+
+.raindrop{
+    stroke: black;
+}
