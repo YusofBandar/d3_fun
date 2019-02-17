@@ -1,4 +1,4 @@
-
+let stopped = false;
 
 function renderParticles(amount = 500, options = {}) {
 
@@ -8,6 +8,7 @@ function renderParticles(amount = 500, options = {}) {
         h = 500;
 
     let svg = d3.select("body").append("svg")
+        .attr("class","particlesCanvas")
         .attr("width", w)
         .attr("height", h);
 
@@ -22,6 +23,7 @@ function renderParticles(amount = 500, options = {}) {
             };
         }))
         .enter().append("circle")
+        .attr('class','particle')
         .attr("r", function (d) {
             return d.r;
         });
@@ -30,7 +32,9 @@ function renderParticles(amount = 500, options = {}) {
 
 
     d3.timer(function () {
-        
+        if(stopped){
+            return;
+        }
 
         // Update the circle positions.
         particles
@@ -50,7 +54,6 @@ function renderParticles(amount = 500, options = {}) {
 
         svg.selectAll("line").remove()
         let count = 0;
-        let lines = 0;
         particles.each(function (p1, p1Index) {
             count ++;
             particles.each(function (p2, p2Index) {
@@ -58,24 +61,23 @@ function renderParticles(amount = 500, options = {}) {
                     return
                 }
                 if (distance(p1.x, p1.y,p2.x, p2.y) < options.maxDistance) {
-                    lines ++;
                     svg.append("line")
+                        .attr("class","link")
                         .attr("x1", p1.x)
                         .attr("y1", p1.y)
                         .attr("x2", p2.x)
                         .attr("y2", p2.y)
-                        .attr("stroke", "black")
                 }
             })
-        })
-
-        console.log(lines)
-        
+        })        
     });
 }
 
 
-
+function stop(){
+    document.getElementById('stopButton').innerHTML = stopped ? 'Stop' : 'Start';
+    stopped = !stopped
+}
 
 
 function distance(x0, y0, x1, y1) {
@@ -119,4 +121,4 @@ function defaultOptions(options) {
 }
 
 
-renderParticles(80);
+renderParticles(100,{maxSpeed:2});
