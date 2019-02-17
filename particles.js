@@ -2,7 +2,7 @@ let stopped = false;
 
 function renderParticles(amount = 500, options = {}) {
 
-    options = defaultOptions(options);
+    options = defaultParticleOptions(options);
 
     let w = 960,
         h = 500;
@@ -82,7 +82,7 @@ function stop(){
 
 
 
-function defaultOptions(options) {
+function defaultParticleOptions(options) {
     const MINSIZE = 1,
         MAXSIZE = 10;
 

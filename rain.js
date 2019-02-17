@@ -1,6 +1,6 @@
 function renderRain(amount = 500, options = {}) {
 
-    options = defaultOptions(options);
+    options = defaultRainOptions(options);
 
     let w = 960,
         h = 500;
@@ -67,7 +67,7 @@ function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-function defaultOptions(options) {
+function defaultRainOptions(options) {
     const MINSIZE = 5,
         MAXSIZE = 15;
 
