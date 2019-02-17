@@ -39,13 +39,14 @@ function renderRain(amount = 500, options = {}) {
 
     let raindrops = svg.selectAll("circle")
         .data(d3.range(amount).map(function () {
-            length = getRandomArbitrary(options.minLength, options.maxLength);
+            zIndex = getRandomArbitrary(0,10);
             return {
                 x: w * Math.random(),
-                y: getRandomArbitrary(-100,-200),
-                d: length * 0.3,
+                y: getRandomArbitrary(-100,-600),
+                z: zIndex,
+                d: map(zIndex,0,10,3,10),
+                length : map(zIndex,0,10,options.minLength,options.maxLength),
                 hidden :false,
-                length
             }
         }))
         .enter().append("line")
@@ -79,7 +80,7 @@ function renderRain(amount = 500, options = {}) {
                 d.y += d.d;
                 if (d.y > h) {
                     d.hidden = false;
-                    d.y = getRandomArbitrary(-100,-200);
+                    d.y = getRandomArbitrary(-100,-600);
                 }
                 return d.y;
             }).attr("x2", function (d) {
