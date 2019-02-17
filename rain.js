@@ -1,7 +1,10 @@
 function renderRain(amount = 500, options = {}) {
 
     options = defaultRainOptions(options);
-    console.log(options)
+    
+
+    let drag = d3.drag();
+
     let w = 960,
         h = 500;
 
@@ -10,13 +13,23 @@ function renderRain(amount = 500, options = {}) {
         .attr("width", w)
         .attr("height", h);
 
+    let rectWidth = 200;
+    let rectHeight = 100;
+
+    let rect = svg.append('rect')
+        .attr('x',(w/2)-(rectWidth/2))
+        .attr('y',h-rectHeight)
+        .attr('width',rectWidth)
+        .attr('height',rectHeight)
+        
+
     let raindrops = svg.selectAll("circle")
         .data(d3.range(amount).map(function () {
             length = getRandomArbitrary(options.minLength, options.maxLength);
             return {
                 x: w * Math.random(),
                 y: h * Math.random(),
-                d: length * 0.8,
+                d: length * 0.3,
                 length
             }
         }))
@@ -67,9 +80,6 @@ function defaultRainOptions(options) {
     const MINLENGTH = 5,
         MAXLENGTH = 20;
 
-    const MINSPEED = 1,
-        MAXSPEED = 5;
-
     if (!('minLength' in options)) {
         options.minLength = MINLENGTH;
     }
@@ -78,17 +88,11 @@ function defaultRainOptions(options) {
         options.maxLength = MAXLENGTH;
     }
 
-    if (!('minSpeed' in options)) {
-        options.minSpeed = MINSPEED;
-    }
 
-    if (!('maxSpeed' in options)) {
-        options.maxSpeed = MAXSPEED;
-    }
 
 
     return options;
 }
 
 
-renderRain(400);
+renderRain(800);
