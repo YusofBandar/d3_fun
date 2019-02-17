@@ -15,8 +15,8 @@ function renderParticles(amount = 500, options = {}) {
                 x: w * Math.random(),
                 y: h * Math.random(),
                 r : getRandomArbitrary(options.minSize,options.maxSize),
-                dx: Math.random(),
-                dy: Math.random()
+                dx: getRandomArbitrary(options.minSpeed,options.maxSpeed),
+                dy: getRandomArbitrary(options.minSpeed,options.maxSpeed)
             };
         }))
         .enter().append("circle")
@@ -51,8 +51,8 @@ function defaultOptions(options) {
     const MINSIZE = 1,
         MAXSIZE = 10;
 
-    const MINSPEED = 10,
-        MAXSPEED = 100;
+    const MINSPEED = 1,
+        MAXSPEED = 5;
 
     if (!('minSize' in options)) {
         options.minSize = MINSIZE;
