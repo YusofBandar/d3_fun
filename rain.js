@@ -42,7 +42,7 @@ function renderRain(amount = 500, options = {}) {
             length = getRandomArbitrary(options.minLength, options.maxLength);
             return {
                 x: w * Math.random(),
-                y: h * Math.random(),
+                y: getRandomArbitrary(-100,-200),
                 d: length * 0.3,
                 hidden :false,
                 length
@@ -72,9 +72,6 @@ function renderRain(amount = 500, options = {}) {
                 if (d.x > w) {
                     d.hidden = false;
                     d.x -= w;
-                } else if (d.x < 0) {
-                    d.hidden = false;
-                    d.x += w;
                 }
                 return d.x;
             })
@@ -82,10 +79,7 @@ function renderRain(amount = 500, options = {}) {
                 d.y += d.d;
                 if (d.y > h) {
                     d.hidden = false;
-                    d.y -= h;
-                } else if (d.y < 0) {
-                    d.hidden = false;
-                    d.y += h;
+                    d.y = getRandomArbitrary(-100,-200);
                 }
                 return d.y;
             }).attr("x2", function (d) {
