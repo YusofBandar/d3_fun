@@ -14,15 +14,17 @@ function renderParticles(amount = 500, options = {}) {
             return {
                 x: w * Math.random(),
                 y: h * Math.random(),
-                r : getRandomArbitrary(options.minSize,options.maxSize),
-                dx: getRandomArbitrary(options.minSpeed,options.maxSpeed),
-                dy: getRandomArbitrary(options.minSpeed,options.maxSpeed)
+                r: getRandomArbitrary(options.minSize, options.maxSize),
+                dx: getRandomArbitrary(options.minSpeed, options.maxSpeed),
+                dy: getRandomArbitrary(options.minSpeed, options.maxSpeed)
             };
         }))
         .enter().append("circle")
-        .attr("r",function(d){
+        .attr("r", function (d) {
             return d.r;
         });
+
+
 
 
     d3.timer(function () {
@@ -40,18 +42,34 @@ function renderParticles(amount = 500, options = {}) {
                 else if (d.y < 0) d.y += h;
                 return d.y;
             });
+
+        svg.selectAll("line").remove()
+        particles.each(function (p1, p1Index) {
+            particles.each(function (p2, p2Index) {
+                
+                if (distance(p1.x, p1.y,p2.x, p2.y) < options.maxDistance) {
+                    
+                    svg.append("line")
+                        .attr("x1", p1.x)
+                        .attr("y1", p1.y)
+                        .attr("x2", p2.x)
+                        .attr("y2", p2.y)
+                        .attr("stroke", "black")
+                }
+            })
+        })
     });
 }
 
 
 
-function distance(x0,y0,x1,y1){
-    return Math.hypot(x1 -x0,y1-y0);
+function distance(x0, y0, x1, y1) {
+    return Math.hypot(x1 - x0, y1 - y0);
 }
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
-  }
+}
 
 function defaultOptions(options) {
     const MINSIZE = 1,
@@ -59,6 +77,8 @@ function defaultOptions(options) {
 
     const MINSPEED = 1,
         MAXSPEED = 5;
+
+    const MAXDISTANCE = 50;
 
     if (!('minSize' in options)) {
         options.minSize = MINSIZE;
@@ -76,8 +96,12 @@ function defaultOptions(options) {
         options.maxSpeed = MAXSPEED;
     }
 
+    if (!('maxDistance' in options)) {
+        options.maxDistance = MAXDISTANCE;
+    }
+
     return options;
 }
 
 
-renderParticles(50);
+renderParticles(80);
