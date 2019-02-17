@@ -1,4 +1,3 @@
-
 let wind = 10;
 
 function renderRain(amount = 500, options = {}) {
@@ -8,12 +7,25 @@ function renderRain(amount = 500, options = {}) {
 
     let drag = d3.drag().on("drag", dragMovement);
 
+
+    let w = 960,
+        h = 500;
+
     function dragMovement(d) {
         let dX = d3.event.x;
         let dY = d3.event.y;
 
-        let width = d3.select(this).attr('width');
-        let height = d3.select(this).attr('height');
+        let width = Number(d3.select(this).attr('width'));
+        let height = Number(d3.select(this).attr('height'));
+
+        console.log(dX+width);
+
+        if(dX + (width/2) > w){dX = w-(width/2);}
+        else if(dX-(width/2) < 0){dX = width/2;}
+
+
+        if(dY + (height/2) > h){dY = h-(height/2);}
+        else if(dY-(height/2) < 0){dY = height/2;}
 
         d3.select(this).attr('x', dX - width / 2)
             .attr('y', dY - height / 2);
@@ -21,8 +33,7 @@ function renderRain(amount = 500, options = {}) {
 
 
 
-    let w = 960,
-        h = 500;
+
 
     let svg = d3.select("body").append("svg")
         .attr("class", "rainCanvas")
@@ -42,14 +53,14 @@ function renderRain(amount = 500, options = {}) {
 
     let raindrops = svg.selectAll("circle")
         .data(d3.range(amount).map(function () {
-            zIndex = getRandomArbitrary(0,10);
+            zIndex = getRandomArbitrary(0, 10);
             return {
                 x: w * Math.random(),
-                y: getRandomArbitrary(-100,-600),
+                y: getRandomArbitrary(-100, -600),
                 z: zIndex,
-                d: map(zIndex,0,10,3,10),
-                length : map(zIndex,0,10,options.minLength,options.maxLength),
-                hidden :false,
+                d: map(zIndex, 0, 10, 3, 10),
+                length: map(zIndex, 0, 10, options.minLength, options.maxLength),
+                hidden: false,
             }
         }))
         .enter().append("line")
@@ -83,7 +94,7 @@ function renderRain(amount = 500, options = {}) {
                 d.y += d.d;
                 if (d.y > h) {
                     d.hidden = false;
-                    d.y = getRandomArbitrary(-100,-600);
+                    d.y = getRandomArbitrary(-100, -600);
                 }
                 return d.y;
             }).attr("x2", function (d) {
