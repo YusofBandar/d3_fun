@@ -34,7 +34,10 @@ function renderRain(amount = 500, options = {}) {
     }
 
 
-    let container = d3.select("body").append("div").attr('class', 'rain');
+    let container = d3.select("body")
+    .append("div")
+    .attr("class", "effect")
+    .attr("id","rain");
 
     container
         .append("div")
