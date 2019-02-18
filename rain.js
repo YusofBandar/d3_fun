@@ -1,5 +1,3 @@
-
-
 function renderRain(amount = 500, options = {}) {
 
     options = defaultRainOptions(options);
@@ -78,7 +76,7 @@ function renderRain(amount = 500, options = {}) {
         .data(d3.range(amount).map(function () {
             zIndex = getRandomArbitrary(0, 10);
             return {
-                x: w * Math.random(),
+                x: getRandomArbitrary(-10, w),
                 y: getRandomArbitrary(-100, -600),
                 z: zIndex,
                 d: map(zIndex, 0, 10, 3, 10),
@@ -109,10 +107,10 @@ function renderRain(amount = 500, options = {}) {
                 d.x += wind;
                 if (d.x > w) {
                     d.hidden = false;
-                    d.x = w * Math.random();
-                }else if(d.x < 0){
+                    d.x = getRandomArbitrary(-10, w);
+                } else if (d.x < 0) {
                     d.hidden = false;
-                    d.x = w * Math.random();
+                    d.x = getRandomArbitrary(-10, w);
                 }
                 return d.x;
             })
