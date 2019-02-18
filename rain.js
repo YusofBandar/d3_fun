@@ -109,7 +109,10 @@ function renderRain(amount = 500, options = {}) {
                 d.x += wind;
                 if (d.x > w) {
                     d.hidden = false;
-                    d.x -= w;
+                    d.x = w * Math.random();
+                }else if(d.x < 0){
+                    d.hidden = false;
+                    d.x = w * Math.random();
                 }
                 return d.x;
             })
@@ -118,6 +121,7 @@ function renderRain(amount = 500, options = {}) {
                 if (d.y > h) {
                     d.hidden = false;
                     d.y = getRandomArbitrary(-100, -600);
+                    d.x = w * Math.random();
                 }
                 return d.y;
             }).attr("x2", function (d) {
@@ -163,4 +167,4 @@ function defaultRainOptions(options) {
 }
 
 
-renderRain(800);
+renderRain(500);
