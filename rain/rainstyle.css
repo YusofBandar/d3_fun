@@ -4,6 +4,10 @@
 	position: relative
 }
 
+#block{
+	fill: rgb(137, 147, 211)
+}
+
 .slider {
 	-webkit-appearance: none;
 	width: 200px;

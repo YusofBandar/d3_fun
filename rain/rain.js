@@ -68,6 +68,7 @@ function renderRain(amount = 500, options = {}) {
     let rectHeight = 100;
 
     let rect = svg.append("rect")
+        .attr("id","block")
         .attr("x", (w / 2) - (rectWidth / 2))
         .attr("y", h - rectHeight)
         .attr("width", rectWidth)
