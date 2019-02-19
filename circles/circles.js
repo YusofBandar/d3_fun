@@ -13,53 +13,59 @@ function renderCircles() {
 
 
 
-
-    let circles = svg.selectAll("circle")
-        .data(d3.range(1).map(function () {
+    let orbits = svg.selectAll(".orbit")
+        .data(d3.range(8).map(function (index) {
             return {
-                x: (w / 2) + 100,
-                y: (h / 2) + 100,
-            };
+                x: (index + 1) * 100,
+                y: 100,
+                rotationSpeed: index+0.5,
+                orbitRadius: 30
+            }
         }))
-        .enter().append("circle")
-        .attr('class', 'circle')
+        .enter().append("g")
+        .attr("class", "orbit")
+
+
+
+    svg.selectAll(".orbit")
+        .append("circle")
+        .attr("class", "planet")
         .attr("r", function (d) {
-            return 5;
+            return d.orbitRadius;
         })
         .attr("cx", function (d) {
             return d.x;
         })
         .attr("cy", function (d) {
             return d.y;
-        });
+        })
 
-
-    let point = svg.append("circle")
-        .attr('class', 'circle')
+    svg.selectAll(".orbit")
+        .append("circle")
+        .attr("class", "satellite")
         .attr("r", function (d) {
-            return 5;
+            return d.orbitRadius / 10
         })
         .attr("cx", function (d) {
-            return w / 2;
+            return d.x + d.orbitRadius;
         })
         .attr("cy", function (d) {
-            return h / 2;
-        });
+            return d.y;
+        })
+
+
+
 
 
     let t = 0;
-
     d3.timer(function () {
         // Update the circle positions.
+        orbits.selectAll(".satellite")
+            .attr("transform", function (d) {
+                return `rotate(${t * d.rotationSpeed},${d.x},${d.y})`
+            })
 
-        circles
-        .attr("transform",function(d){
-            return `rotate(${t},${w/2},${h/2})`
-        })
-
-        t = t + 5;
-
-
+        t = t + 1;
     });
 }
 
