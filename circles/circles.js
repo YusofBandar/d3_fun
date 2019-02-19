@@ -5,56 +5,22 @@ function renderCircles() {
 
 
     let w = 960,
-        h = 500;
+        h = 1000;
 
     let svg = d3.select("body").append("svg")
         .attr("width", w)
         .attr("height", h);
 
+    const amount = 8;
 
-
-    let orbits = svg.selectAll(".orbit")
-        .data(d3.range(8).map(function (index) {
-            return {
-                x: (index + 1) * 100,
-                y: 100,
-                rotationSpeed: index+0.5,
-                orbitRadius: 30
-            }
-        }))
-        .enter().append("g")
-        .attr("class", "orbit")
+    //orbits
+    let orbits = svg.append("g")
+        .attr("class", "orbits");
 
 
 
-    svg.selectAll(".orbit")
-        .append("circle")
-        .attr("class", "planet")
-        .attr("r", function (d) {
-            return d.orbitRadius;
-        })
-        .attr("cx", function (d) {
-            return d.x;
-        })
-        .attr("cy", function (d) {
-            return d.y;
-        })
-
-    svg.selectAll(".orbit")
-        .append("circle")
-        .attr("class", "satellite")
-        .attr("r", function (d) {
-            return d.orbitRadius / 10
-        })
-        .attr("cx", function (d) {
-            return d.x + d.orbitRadius;
-        })
-        .attr("cy", function (d) {
-            return d.y;
-        })
-
-
-
+    generateOrbit(orbits,8,'xaxis',function(index){return ((index + 1) * 80) + 100},function(index){return 100});
+    generateOrbit(orbits,8,'yaxis',function(index){return 100},function(index){return ((index + 1) * 80) + 100});
 
 
     let t = 0;
@@ -67,6 +33,63 @@ function renderCircles() {
 
         t = t + 1;
     });
+}
+
+function generateOrbit(node,amount=8,axisName,xfn,yfn) {
+   
+    
+    orbits = node.append("g")
+        .attr("class",axisName);
+
+    //
+
+    orbits = orbits.selectAll(".orbit")
+        .data(d3.range(amount).map(function (index) {
+            return {
+                x: xfn(index),
+                y: yfn(index),
+                rotationSpeed: index + 0.5,
+                orbitRadius: 30,
+                index
+            }
+        }))
+        .enter()
+        .append("g")
+        .attr("class", "orbit")
+        .attr("id", function (d) {
+            return d.index;
+        })
+
+
+
+
+    orbits
+        .append("circle")
+        .attr("class", "planet")
+        .attr("r", function (d) {
+            return d.orbitRadius;
+        })
+        .attr("cx", function (d) {
+            return d.x;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+
+    orbits
+        .append("circle")
+        .attr("class", "satellite")
+        .attr("r", function (d) {
+            return d.orbitRadius / 10
+        })
+        .attr("cx", function (d) {
+            return d.x + d.orbitRadius;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+
+    return orbits;
 }
 
 
