@@ -2,8 +2,6 @@ let stopped = false;
 
 function renderCircles() {
 
-
-
     let w = 960,
         h = 1000;
 
@@ -11,16 +9,20 @@ function renderCircles() {
         .attr("width", w)
         .attr("height", h);
 
-    const amount = 8;
+    const amount = 10;
 
     //orbits
     let orbits = svg.append("g")
         .attr("class", "orbits");
 
+    //patterns
+    svg.append("g")
+        .attr("class","pattern");
 
-
-    generateOrbit(orbits,8,'xaxis',function(index){return ((index + 1) * 80) + 100},function(index){return 100});
-    generateOrbit(orbits,8,'yaxis',function(index){return 100},function(index){return ((index + 1) * 80) + 100});
+    //x axis
+    generateOrbit(orbits,amount,'xaxis',function(index){return ((index + 1) * 80) + 100},function(index){return 100});
+    //y axis
+    generateOrbit(orbits,amount,'yaxis',function(index){return 100},function(index){return ((index + 1) * 80) + 100});
 
 
     let t = 0;
@@ -31,7 +33,7 @@ function renderCircles() {
                 return `rotate(${t * d.rotationSpeed},${d.x},${d.y})`
             })
 
-        t = t + 1;
+        t = t>360 ? 0 : t + 1;
     });
 }
 
@@ -41,14 +43,12 @@ function generateOrbit(node,amount=8,axisName,xfn,yfn) {
     orbits = node.append("g")
         .attr("class",axisName);
 
-    //
-
     orbits = orbits.selectAll(".orbit")
         .data(d3.range(amount).map(function (index) {
             return {
                 x: xfn(index),
                 y: yfn(index),
-                rotationSpeed: index + 0.5,
+                rotationSpeed: index + 1,
                 orbitRadius: 30,
                 index
             }
@@ -59,9 +59,6 @@ function generateOrbit(node,amount=8,axisName,xfn,yfn) {
         .attr("id", function (d) {
             return d.index;
         })
-
-
-
 
     orbits
         .append("circle")
