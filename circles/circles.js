@@ -4,8 +4,8 @@ function renderCircles() {
 
 
 
-    const xamount = 10;
-    const yamount = 10;
+    const xamount = 30;
+    const yamount = 30;
 
     let w = (140*2) + 80 * xamount,
         h = (140*2) + 80 * yamount;
@@ -69,7 +69,7 @@ function renderCircles() {
 
                 context.beginPath();
                 context.rect(xsatellites[i].x, ysatellites[j].y, 1, 1);
-                context.fillStyle = "red";
+                context.fillStyle = xsatellites[i].colour;
                 context.fill();
                 context.closePath();
             }
@@ -77,6 +77,11 @@ function renderCircles() {
 
         t = t + 1;
     });
+}
+
+
+function mapNumRange(num,inMin,inMax,outMin,outMax){
+    return ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
 function rotate(cx, cy, x, y, angle) {
@@ -100,6 +105,7 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
     orbits = orbits.selectAll(".orbit")
         .data(d3.range(amount).map(function (index) {
             return {
+                colour: d3.interpolateLab("#00b3ff", "#70ff40")(mapNumRange(index,0,amount,0,1)),
                 startingX: xfn(index),
                 startingY: yfn(index),
                 x: xfn(index),
@@ -130,6 +136,9 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
         })
         .attr("cy", function (d) {
             return d.y;
+        })
+        .style("stroke",function(d){
+            return d.colour;
         })
 
     orbits
