@@ -4,32 +4,32 @@ function renderCircles() {
 
 
 
-    let w = 960,
+    let w =3000,
         h = 1000;
 
     let svg = d3.select("body").append("svg")
         .attr("width", w)
         .attr("height", h);
 
-    const amount = 8;
+    const amount = 20;
 
     //orbits
     let orbits = svg.append("g")
         .attr("class", "orbits");
 
-    generateOrbit(orbits, 8, 'xaxis', function (index) {
+    generateOrbit(orbits, amount, 'xaxis', function (index) {
         return ((index + 1) * 80) + 100
     }, function (index) {
         return 100
     });
-    generateOrbit(orbits, 8, 'yaxis', function (index) {
+    generateOrbit(orbits, 3, 'yaxis', function (index) {
         return 100
     }, function (index) {
         return ((index + 1) * 80) + 100
     });
 
 
-
+    console.log(orbits.selectAll(".satellite").data());
 
 
     let t = 0;
@@ -37,7 +37,7 @@ function renderCircles() {
         // Update the circle positions.
         orbits.selectAll(" .satellite")
             .attr("cx", function (d) {
-                let rc = rotate(d.startingX, d.startingY, d.orbitRadius + d.startingX,d.startingY, -d.rotationSpeed * t);
+                let rc = rotate(d.startingX, d.startingY, d.orbitRadius + d.startingX, d.startingY, -d.rotationSpeed * t);
                 d.x = rc[0];
                 d.y = rc[1];
 
@@ -46,6 +46,23 @@ function renderCircles() {
             .attr("cy", function (d) {
                 return d.y;
             })
+
+
+        let xsatellites = orbits.selectAll(".xaxis .satellite").data();
+        let ysatellites = orbits.selectAll(".yaxis .satellite").data();
+
+        for (let i = 0, xlength = xsatellites.length; i < xlength; i++) {
+            for (let j = 0,ylength = ysatellites.length; j < ylength; j++) {
+                svg.append("circle")
+                    .attr("r", 1)
+                    .attr("cx", function (d) {
+                        return xsatellites[i].x;
+                    })
+                    .attr("cy", function (d) {
+                        return ysatellites[j].y
+                    })
+            }
+        }
 
         t = t + 1;
     });
