@@ -2,3 +2,14 @@
     fill: none;
     stroke: black;
 }
+
+#circles{
+    position: relative;
+}
+
+#circlesCanvas{
+    position: absolute;
+    top:0;
+    left: 0;
+}
+

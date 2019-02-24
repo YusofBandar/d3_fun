@@ -4,32 +4,45 @@ function renderCircles() {
 
 
 
-    let w =3000,
-        h = 1000;
+    const xamount = 10;
+    const yamount = 10;
 
-    let svg = d3.select("body").append("svg")
+    let w = (140*2) + 80 * xamount,
+        h = (140*2) + 80 * yamount;
+
+    let div = d3.select("body").append("div")
+        .attr("id", "circles")
+
+    let svg = div.append("svg")
+        .attr("id", "circlesSvg")
         .attr("width", w)
         .attr("height", h);
 
-    const amount = 20;
+    let canvas = div
+        .append('canvas')
+        .attr("id", "circlesCanvas")
+        .attr('width', w)
+        .attr('height', h);
+
+    let context = canvas.node().getContext('2d');
+
+
+
 
     //orbits
     let orbits = svg.append("g")
         .attr("class", "orbits");
 
-    generateOrbit(orbits, amount, 'xaxis', function (index) {
+    generateOrbit(orbits, xamount, 'xaxis', function (index) {
         return ((index + 1) * 80) + 100
     }, function (index) {
         return 100
     });
-    generateOrbit(orbits, 3, 'yaxis', function (index) {
+    generateOrbit(orbits, yamount, 'yaxis', function (index) {
         return 100
     }, function (index) {
         return ((index + 1) * 80) + 100
     });
-
-
-    console.log(orbits.selectAll(".satellite").data());
 
 
     let t = 0;
@@ -52,15 +65,13 @@ function renderCircles() {
         let ysatellites = orbits.selectAll(".yaxis .satellite").data();
 
         for (let i = 0, xlength = xsatellites.length; i < xlength; i++) {
-            for (let j = 0,ylength = ysatellites.length; j < ylength; j++) {
-                svg.append("circle")
-                    .attr("r", 1)
-                    .attr("cx", function (d) {
-                        return xsatellites[i].x;
-                    })
-                    .attr("cy", function (d) {
-                        return ysatellites[j].y
-                    })
+            for (let j = 0, ylength = ysatellites.length; j < ylength; j++) {
+
+                context.beginPath();
+                context.rect(xsatellites[i].x, ysatellites[j].y, 1, 1);
+                context.fillStyle = "red";
+                context.fill();
+                context.closePath();
             }
         }
 
@@ -93,7 +104,7 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
                 startingY: yfn(index),
                 x: xfn(index),
                 y: yfn(index),
-                rotationSpeed: index + 0.5,
+                rotationSpeed: (index + 1) * 0.4,
                 orbitRadius: 30,
                 index
             }
