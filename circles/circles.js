@@ -4,11 +4,11 @@ function renderCircles() {
 
 
 
-    const xamount = 30;
-    const yamount = 30;
+    const xamount = 10;
+    const yamount = 10;
 
-    let w = (140*2) + 80 * xamount,
-        h = (140*2) + 80 * yamount;
+    let w = (140 * 2) + 80 * xamount,
+        h = (140 * 2) + 80 * yamount;
 
     let div = d3.select("body").append("div")
         .attr("id", "circles")
@@ -37,17 +37,17 @@ function renderCircles() {
         return ((index + 1) * 80) + 100
     }, function (index) {
         return 100
-    });
+    }, w, h);
     generateOrbit(orbits, yamount, 'yaxis', function (index) {
         return 100
     }, function (index) {
         return ((index + 1) * 80) + 100
-    });
+    }, w, h);
 
 
     let t = 0;
     d3.timer(function () {
-        // Update the circle positions.
+        //Update the circle positions.
         orbits.selectAll(" .satellite")
             .attr("cx", function (d) {
                 let rc = rotate(d.startingX, d.startingY, d.orbitRadius + d.startingX, d.startingY, -d.rotationSpeed * t);
@@ -57,6 +57,22 @@ function renderCircles() {
                 return d.x;
             })
             .attr("cy", function (d) {
+                return d.y;
+            })
+
+        orbits.selectAll(".xaxis .line")
+            .attr("x1", function (d) {
+                return d.x;
+            })
+            .attr("x2", function (d) {
+                return d.x;
+            })
+
+        orbits.selectAll(".yaxis .line")
+            .attr("y1", function (d) {
+                return d.y;
+            })
+            .attr("y2", function (d) {
                 return d.y;
             })
 
@@ -80,7 +96,7 @@ function renderCircles() {
 }
 
 
-function mapNumRange(num,inMin,inMax,outMin,outMax){
+function mapNumRange(num, inMin, inMax, outMin, outMax) {
     return ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
@@ -94,7 +110,7 @@ function rotate(cx, cy, x, y, angle) {
 }
 
 
-function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
+function generateOrbit(node, amount = 8, axisName, xfn, yfn, width, height) {
 
 
     orbits = node.append("g")
@@ -105,12 +121,12 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
     orbits = orbits.selectAll(".orbit")
         .data(d3.range(amount).map(function (index) {
             return {
-                colour: d3.interpolateLab("#00b3ff", "#70ff40")(mapNumRange(index,0,amount,0,1)),
+                colour: d3.interpolateLab("#00b3ff", "#70ff40")(mapNumRange(index, 0, amount, 0, 1)),
                 startingX: xfn(index),
                 startingY: yfn(index),
                 x: xfn(index),
                 y: yfn(index),
-                rotationSpeed: (index + 1) * 0.4,
+                rotationSpeed: (index + 1) * 0.8,
                 orbitRadius: 30,
                 index
             }
@@ -137,7 +153,7 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
         .attr("cy", function (d) {
             return d.y;
         })
-        .style("stroke",function(d){
+        .style("stroke", function (d) {
             return d.colour;
         })
 
@@ -153,6 +169,40 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
         .attr("cy", function (d) {
             return d.y;
         })
+
+    orbits
+        .append("line")
+        .attr("class", "line")
+        .attr("x1", function (d) {
+            if (axisName === 'xaxis') {
+                return d.x + d.orbitRadius;
+            }
+            return 0;
+
+
+        })
+        .attr("y1", function (d) {
+            if (axisName === 'xaxis') {
+                return 0
+            }
+            return d.y;
+
+        })
+        .attr("x2", function (d) {
+            if (axisName === 'xaxis') {
+                return d.x + d.orbitRadius;
+            }
+            return width;
+
+        })
+        .attr("y2", function (d) {
+            if (axisName === 'xaxis') {
+                return height;
+            }
+            return d.y;
+
+        });
+
 
     return orbits;
 }
