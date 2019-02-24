@@ -1,4 +1,4 @@
-let stopped = false;
+
 
 function renderCircles() {
 
@@ -96,18 +96,9 @@ function renderCircles() {
 }
 
 
-function mapNumRange(num, inMin, inMax, outMin, outMax) {
-    return ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
-}
 
-function rotate(cx, cy, x, y, angle) {
-    let radians = (Math.PI / 180) * angle,
-        cos = Math.cos(radians),
-        sin = Math.sin(radians),
-        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-    return [nx, ny];
-}
+
+
 
 
 function generateOrbit(node, amount = 8, axisName, xfn, yfn, width, height) {
@@ -116,12 +107,12 @@ function generateOrbit(node, amount = 8, axisName, xfn, yfn, width, height) {
     orbits = node.append("g")
         .attr("class", axisName);
 
-    //
+    
 
     orbits = orbits.selectAll(".orbit")
         .data(d3.range(amount).map(function (index) {
             return {
-                colour: d3.interpolateLab("#00b3ff", "#70ff40")(mapNumRange(index, 0, amount, 0, 1)),
+                colour: d3.interpolateLab("#00b3ff", "#70ff40")(map(index, 0, amount, 0, 1)),
                 startingX: xfn(index),
                 startingY: yfn(index),
                 x: xfn(index),
