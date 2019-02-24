@@ -17,35 +17,63 @@ function renderCircles() {
     let orbits = svg.append("g")
         .attr("class", "orbits");
 
+    generateOrbit(orbits, 8, 'xaxis', function (index) {
+        return ((index + 1) * 80) + 100
+    }, function (index) {
+        return 100
+    });
+    generateOrbit(orbits, 8, 'yaxis', function (index) {
+        return 100
+    }, function (index) {
+        return ((index + 1) * 80) + 100
+    });
 
 
-    generateOrbit(orbits,8,'xaxis',function(index){return ((index + 1) * 80) + 100},function(index){return 100});
-    generateOrbit(orbits,8,'yaxis',function(index){return 100},function(index){return ((index + 1) * 80) + 100});
+
 
 
     let t = 0;
     d3.timer(function () {
         // Update the circle positions.
-        orbits.selectAll(".satellite")
-            .attr("transform", function (d) {
-                return `rotate(${t * d.rotationSpeed},${d.x},${d.y})`
+        orbits.selectAll(" .satellite")
+            .attr("cx", function (d) {
+                let rc = rotate(d.startingX, d.startingY, d.orbitRadius + d.startingX,d.startingY, -d.rotationSpeed * t);
+                d.x = rc[0];
+                d.y = rc[1];
+
+                return d.x;
+            })
+            .attr("cy", function (d) {
+                return d.y;
             })
 
         t = t + 1;
     });
 }
 
-function generateOrbit(node,amount=8,axisName,xfn,yfn) {
-   
-    
+function rotate(cx, cy, x, y, angle) {
+    let radians = (Math.PI / 180) * angle,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+    return [nx, ny];
+}
+
+
+function generateOrbit(node, amount = 8, axisName, xfn, yfn) {
+
+
     orbits = node.append("g")
-        .attr("class",axisName);
+        .attr("class", axisName);
 
     //
 
     orbits = orbits.selectAll(".orbit")
         .data(d3.range(amount).map(function (index) {
             return {
+                startingX: xfn(index),
+                startingY: yfn(index),
                 x: xfn(index),
                 y: yfn(index),
                 rotationSpeed: index + 0.5,
