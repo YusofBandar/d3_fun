@@ -55,7 +55,26 @@ function spiralMatrix(size = 10) {
     return matrix;
 }
 
-function knightMovement(matrix) {
+function extendPath(path,x,y,matrixLength,w,h){
+    path.select(".line").attr("points", function (d) {
+        d.currentX = map(x, 0, matrixLength, 0, w);
+        d.currentY = map(y, 0, matrixLength, 0, h);
+        d.path += ` ${d.currentX},${d.currentY}`;
+        return d.path;
+    })
+
+    path.select(".points").append("circle")
+        .attr("class", "point")
+        .attr("r", 1)
+        .attr("cx", function (d) {
+            return d.currentX;
+        })
+        .attr("cy", function (d) {
+            return d.currentY;
+        });
+}
+
+function renderPath(matrix,movements) {
 
     let w = 1000,
         h = 1000;
@@ -86,37 +105,16 @@ function knightMovement(matrix) {
         .attr("class", "points");
 
 
+    
 
-    let knightMovements = [
-        [1, -2],
-        [-1, -2],
-        [2, -1],
-        [-2, -1],
-        [2, 1],
-        [-2, 1],
-        [1, 2],
-        [-1, 2]
-    ];
+    
 
-    let knightPosition = [(matrix.length / 2) - 1, (matrix.length / 2) - 1];
+    let position = [(matrix.length / 2) - 1, (matrix.length / 2) - 1];
     matrix[(matrix.length / 2) - 1][(matrix.length / 2) - 1] = -1;
 
-    line.attr("points", function (d) {
-        d.currentX = map(knightPosition[0], 0, matrix.length, 0, w);
-        d.currentY = map(knightPosition[1], 0, matrix.length, 0, h);
-        d.path += ` ${d.currentX},${d.currentY}`;
-        return d.path;
-    })
+    
 
-    points.append("circle")
-        .attr("class", "point")
-        .attr("r", 1)
-        .attr("cx", function (d) {
-            return d.currentX;
-        })
-        .attr("cy", function (d) {
-            return d.currentY;
-        });
+    path.call(extendPath,position[0],position[1],matrix.length,w,h);
 
     let possiable = true;
     while (possiable) {
@@ -125,9 +123,9 @@ function knightMovement(matrix) {
         let leastx;
         let leasty;
 
-        for (let i = 0, length = knightMovements.length; i < length; i++) {
-            let x = knightMovements[i][0] + knightPosition[0];
-            let y = knightMovements[i][1] + knightPosition[1];
+        for (let i = 0, length = movements.length; i < length; i++) {
+            let x = movements[i][0] + position[0];
+            let y = movements[i][1] + position[1];
 
             if (y > -1 && y < (matrix.length - 1) && x > -1 && x < (matrix.length - 1)) {
                 let index = matrix[y][x];
@@ -142,25 +140,10 @@ function knightMovement(matrix) {
 
         if (possiable) {
             matrix[leasty][leastx] = -1;
-            knightPosition[0] = leastx;
-            knightPosition[1] = leasty;
+            position[0] = leastx;
+            position[1] = leasty;
 
-            line.attr("points", function (d) {
-                d.currentX = map(knightPosition[0], 0, matrix.length, 0, w);
-                d.currentY = map(knightPosition[1], 0, matrix.length, 0, h);
-                d.path += ` ${d.currentX},${d.currentY}`;
-                return d.path;
-            })
-
-            points.append("circle")
-                .attr("class", "point")
-                .attr("r", 1)
-                .attr("cx", function (d) {
-                    return d.currentX;
-                })
-                .attr("cy", function (d) {
-                    return d.currentY;
-                });
+            path.call(extendPath,position[0],position[1],matrix.length,w,h);
 
 
             console.log(leastx, leasty, "at index ", least);
@@ -171,4 +154,32 @@ function knightMovement(matrix) {
 }
 
 
-knightMovement(spiralMatrix(100));
+let knightMovements = [
+    [1, -2],
+    [-1, -2],
+    [2, -1],
+    [-2, -1],
+    [2, 1],
+    [-2, 1],
+    [1, 2],
+    [-1, 2]
+];
+
+let kingMovements = [
+    [1,0],
+    [0,1],
+    [-1,0],
+    [0,-1]
+]
+
+let diamondMovements = [
+    [1, -2],
+    [-1, -2],
+    [1, 2],
+    [-1, 2]
+]
+
+
+
+renderPath(spiralMatrix(50),knightMovements);
+
