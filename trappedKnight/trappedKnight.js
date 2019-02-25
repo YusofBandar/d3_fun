@@ -55,10 +55,10 @@ function spiralMatrix(size = 10) {
     return matrix;
 }
 
-function extendPath(path,x,y,matrixLength,w,h){
+function extendPath(path, x, y, matrixLength, w, h) {
     path.select(".line").attr("points", function (d) {
-        d.currentX = map(x, 0, matrixLength, 0, w);
-        d.currentY = map(y, 0, matrixLength, 0, h);
+        d.currentX = map(x, 0, matrixLength, 0, w)-10;
+        d.currentY = map(y, 0, matrixLength, 0, h-50)+50;
         d.path += ` ${d.currentX},${d.currentY}`;
         return d.path;
     })
@@ -74,13 +74,9 @@ function extendPath(path,x,y,matrixLength,w,h){
         });
 }
 
-function renderPath(svg,w,h,matrix,movements) {
-
-    console.log(movements);
-
-    svg.selectAll("*").remove();
 
 
+function renderPath(svg, w, h, matrix, movements) {
     let path = svg.selectAll(".path")
         .data(d3.range(1).map(function () {
             return {
@@ -101,78 +97,83 @@ function renderPath(svg,w,h,matrix,movements) {
 
 
 
+
+
     let position = [(matrix.length / 2) - 1, (matrix.length / 2) - 1];
     matrix[(matrix.length / 2) - 1][(matrix.length / 2) - 1] = -1;
 
-    
 
-    path.call(extendPath,position[0],position[1],matrix.length,w,h);
 
-    let possiable = true;
-    while (possiable) {
-        possiable = false;
-        let least = 99999999999;
-        let leastx;
-        let leasty;
+    path.call(extendPath, position[0], position[1], matrix.length, w, h);
 
-        for (let i = 0, length = movements.length; i < length; i++) {
-            let x = Number(movements[i][0]) + position[0];
-            let y = Number(movements[i][1]) + position[1];
 
-            console.log(x,y);
-
-            if (y > -1 && y < (matrix.length - 1) && x > -1 && x < (matrix.length - 1)) {
-                let index = matrix[y][x];
-                if (index != -1 && index < least) {
-                    least = index;
-                    leastx = x;
-                    leasty = y;
-                    possiable = true;
-                }
-            }
-        }
+    d3.timer(function () {
+        let possiable = true;
 
         if (possiable) {
-            matrix[leasty][leastx] = -1;
-            position[0] = leastx;
-            position[1] = leasty;
+            possiable = false;
+            let least = 99999999999;
+            let leastx;
+            let leasty;
 
-            path.call(extendPath,position[0],position[1],matrix.length,w,h);
+            for (let i = 0, length = movements.length; i < length; i++) {
+                let x = Number(movements[i][0]) + position[0];
+                let y = Number(movements[i][1]) + position[1];
+
+                console.log(x, y);
+
+                if (y > -1 && y < (matrix.length - 1) && x > -1 && x < (matrix.length - 1)) {
+                    let index = matrix[y][x];
+                    if (index != -1 && index < least) {
+                        least = index;
+                        leastx = x;
+                        leasty = y;
+                        possiable = true;
+                    }
+                }
+            }
+
+            if (possiable) {
+                matrix[leasty][leastx] = -1;
+                position[0] = leastx;
+                position[1] = leasty;
+
+                path.call(extendPath, position[0], position[1], matrix.length, w, h);
 
 
-            console.log(leastx, leasty, "at index ", least);
-            possiable = true;
+                console.log(leastx, leasty, "at index ", least);
+                possiable = true;
+            }
         }
-
-    }
+    })
 }
 
-let w = 1000,
-h = 1000;
-
-let matrix = spiralMatrix(50)
-
-let svg = d3.select("body").append("svg")
-        .attr("class", "trappedKnightCanvas")
-        .attr("width", w)
-        .attr("height", h);
-
-function draw()
-{
+function draw() {
     let movement = document.getElementById("movement").value;
     movement = (movement.split(" "));
 
     let movementArray = [];
 
-    for(let i=0,length=movement.length;i<length;i++){
+    for (let i = 0, length = movement.length; i < length; i++) {
         let coord = (movement[i].split(","))
         movementArray.push(coord);
     }
 
-    renderPath(svg,w,h,matrix,movementArray);
-    
+    svg.selectAll("*").remove();
+    renderPath(svg, w, h, matrix, movementArray);
+
     return false;
 }
+
+let w = 1000,
+    h = 1000;
+
+let svg = d3.select("body").append("svg")
+    .attr("class", "trappedKnightCanvas")
+    .attr("width", w)
+    .attr("height", h);
+
+let matrix = spiralMatrix(50);
 
 let knightMovements = [
     [1, -2],
@@ -186,10 +187,10 @@ let knightMovements = [
 ];
 
 let kingMovements = [
-    [1,0],
-    [0,1],
-    [-1,0],
-    [0,-1]
+    [1, 0],
+    [0, 1],
+    [-1, 0],
+    [0, -1]
 ]
 
 let diamondMovements = [
@@ -201,5 +202,4 @@ let diamondMovements = [
 
 
 
-renderPath(svg,w,h,matrix,knightMovements);
-
+renderPath(svg, w, h, matrix, knightMovements);
