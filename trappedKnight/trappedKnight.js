@@ -56,6 +56,29 @@ function spiralMatrix(size = 10) {
 }
 
 function knightMovement(matrix) {
+
+    let w = 1000,
+        h = 1000;
+
+    let svg = d3.select("body").append("svg")
+        .attr("class", "trappedKnightCanvas")
+        .attr("width", w)
+        .attr("height", h);
+
+
+
+    let path = svg.selectAll(".path")
+        .data(d3.range(1).map(function () {
+            return {
+                path: ''
+            };
+        }))
+        .enter().append("polyline")
+        .attr('class', 'path')
+
+
+
+
     let knightMovements = [
         [1, -2],
         [-1, -2],
@@ -70,13 +93,18 @@ function knightMovement(matrix) {
     let knightPosition = [(matrix.length / 2) - 1, (matrix.length / 2) - 1];
     matrix[(matrix.length / 2) - 1][(matrix.length / 2) - 1] = -1;
 
+    path.attr("points", function (d) {
+        d.path += ` ${map(knightPosition[0],0,matrix.length,0,w)},${map(knightPosition[1],0,matrix.length,0,h)}`;
+        return d.path;
+    })
+
     let possiable = true;
     while (possiable) {
         possiable = false;
         let least = 99999999999;
         let leastx;
         let leasty;
-        
+
         for (let i = 0, length = knightMovements.length; i < length; i++) {
             let x = knightMovements[i][0] + knightPosition[0];
             let y = knightMovements[i][1] + knightPosition[1];
@@ -91,16 +119,20 @@ function knightMovement(matrix) {
                 }
             }
         }
-        
-        if(possiable){
+
+        if (possiable) {
             matrix[leasty][leastx] = -1;
             knightPosition[0] = leastx;
             knightPosition[1] = leasty;
-            console.log(leastx,leasty, "at index ", least);
+            path.attr("points", function (d) {
+                d.path += ` ${map(knightPosition[0],0,matrix.length,0,w)},${map(knightPosition[1],0,matrix.length,0,h)}`;
+                return d.path;
+            })
+            console.log(leastx, leasty, "at index ", least);
             possiable = true;
         }
-       
+
     }
 }
 
-knightMovement(spiralMatrix(10));
+knightMovement(spiralMatrix(100));
