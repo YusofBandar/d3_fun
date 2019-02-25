@@ -70,12 +70,20 @@ function knightMovement(matrix) {
     let path = svg.selectAll(".path")
         .data(d3.range(1).map(function () {
             return {
-                path: ''
+                path: '',
+                currentX: 0,
+                currentY: 0
             };
         }))
-        .enter().append("polyline")
-        .attr('class', 'path')
+        .enter()
+        .append("g")
+        .attr("class", "path")
 
+    let line = path.append("polyline")
+        .attr('class', 'line')
+
+    let points = path.append("g")
+        .attr("class", "points");
 
 
 
@@ -93,10 +101,22 @@ function knightMovement(matrix) {
     let knightPosition = [(matrix.length / 2) - 1, (matrix.length / 2) - 1];
     matrix[(matrix.length / 2) - 1][(matrix.length / 2) - 1] = -1;
 
-    path.attr("points", function (d) {
-        d.path += ` ${map(knightPosition[0],0,matrix.length,0,w)},${map(knightPosition[1],0,matrix.length,0,h)}`;
+    line.attr("points", function (d) {
+        d.currentX = map(knightPosition[0], 0, matrix.length, 0, w);
+        d.currentY = map(knightPosition[1], 0, matrix.length, 0, h);
+        d.path += ` ${d.currentX},${d.currentY}`;
         return d.path;
     })
+
+    points.append("circle")
+        .attr("class", "point")
+        .attr("r", 1)
+        .attr("cx", function (d) {
+            return d.currentX;
+        })
+        .attr("cy", function (d) {
+            return d.currentY;
+        });
 
     let possiable = true;
     while (possiable) {
@@ -124,15 +144,31 @@ function knightMovement(matrix) {
             matrix[leasty][leastx] = -1;
             knightPosition[0] = leastx;
             knightPosition[1] = leasty;
-            path.attr("points", function (d) {
-                d.path += ` ${map(knightPosition[0],0,matrix.length,0,w)},${map(knightPosition[1],0,matrix.length,0,h)}`;
+
+            line.attr("points", function (d) {
+                d.currentX = map(knightPosition[0], 0, matrix.length, 0, w);
+                d.currentY = map(knightPosition[1], 0, matrix.length, 0, h);
+                d.path += ` ${d.currentX},${d.currentY}`;
                 return d.path;
             })
+
+            points.append("circle")
+                .attr("class", "point")
+                .attr("r", 1)
+                .attr("cx", function (d) {
+                    return d.currentX;
+                })
+                .attr("cy", function (d) {
+                    return d.currentY;
+                });
+
+
             console.log(leastx, leasty, "at index ", least);
             possiable = true;
         }
 
     }
 }
+
 
 knightMovement(spiralMatrix(100));
