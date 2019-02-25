@@ -74,16 +74,11 @@ function extendPath(path,x,y,matrixLength,w,h){
         });
 }
 
-function renderPath(matrix,movements) {
+function renderPath(svg,w,h,matrix,movements) {
 
-    let w = 1000,
-        h = 1000;
+    console.log(movements);
 
-    let svg = d3.select("body").append("svg")
-        .attr("class", "trappedKnightCanvas")
-        .attr("width", w)
-        .attr("height", h);
-
+    svg.selectAll("*").remove();
 
 
     let path = svg.selectAll(".path")
@@ -105,9 +100,6 @@ function renderPath(matrix,movements) {
         .attr("class", "points");
 
 
-    
-
-    
 
     let position = [(matrix.length / 2) - 1, (matrix.length / 2) - 1];
     matrix[(matrix.length / 2) - 1][(matrix.length / 2) - 1] = -1;
@@ -124,8 +116,10 @@ function renderPath(matrix,movements) {
         let leasty;
 
         for (let i = 0, length = movements.length; i < length; i++) {
-            let x = movements[i][0] + position[0];
-            let y = movements[i][1] + position[1];
+            let x = Number(movements[i][0]) + position[0];
+            let y = Number(movements[i][1]) + position[1];
+
+            console.log(x,y);
 
             if (y > -1 && y < (matrix.length - 1) && x > -1 && x < (matrix.length - 1)) {
                 let index = matrix[y][x];
@@ -153,6 +147,32 @@ function renderPath(matrix,movements) {
     }
 }
 
+let w = 1000,
+h = 1000;
+
+let matrix = spiralMatrix(50)
+
+let svg = d3.select("body").append("svg")
+        .attr("class", "trappedKnightCanvas")
+        .attr("width", w)
+        .attr("height", h);
+
+function draw()
+{
+    let movement = document.getElementById("movement").value;
+    movement = (movement.split(" "));
+
+    let movementArray = [];
+
+    for(let i=0,length=movement.length;i<length;i++){
+        let coord = (movement[i].split(","))
+        movementArray.push(coord);
+    }
+
+    renderPath(svg,w,h,matrix,movementArray);
+    
+    return false;
+}
 
 let knightMovements = [
     [1, -2],
@@ -181,5 +201,5 @@ let diamondMovements = [
 
 
 
-renderPath(spiralMatrix(50),knightMovements);
+renderPath(svg,w,h,matrix,knightMovements);
 
