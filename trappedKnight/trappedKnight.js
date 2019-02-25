@@ -57,7 +57,7 @@ function spiralMatrix(size = 10) {
 
 function extendPath(path, x, y, matrixLength, w, h) {
     path.select(".line").attr("points", function (d) {
-        d.currentX = map(x, 0, matrixLength, 0, w)-10;
+        d.currentX = map(x, 0, matrixLength, 0, w);
         d.currentY = map(y, 0, matrixLength, 0, h-50)+50;
         d.path += ` ${d.currentX},${d.currentY}`;
         return d.path;
@@ -120,8 +120,7 @@ function renderPath(svg, w, h, matrix, movements) {
                 let x = Number(movements[i][0]) + position[0];
                 let y = Number(movements[i][1]) + position[1];
 
-                console.log(x, y);
-
+                
                 if (y > -1 && y < (matrix.length - 1) && x > -1 && x < (matrix.length - 1)) {
                     let index = matrix[y][x];
                     if (index != -1 && index < least) {
@@ -173,7 +172,7 @@ let svg = d3.select("body").append("svg")
     .attr("width", w)
     .attr("height", h);
 
-let matrix = spiralMatrix(50);
+let matrix = spiralMatrix(70);
 
 let knightMovements = [
     [1, -2],
