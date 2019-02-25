@@ -74,7 +74,8 @@ function knightMovement(matrix) {
     while (possiable) {
         possiable = false;
         let least = 99999999999;
-        let leastcoord = [];
+        let leastx;
+        let leasty;
         
         for (let i = 0, length = knightMovements.length; i < length; i++) {
             let x = knightMovements[i][0] + knightPosition[0];
@@ -84,22 +85,22 @@ function knightMovement(matrix) {
                 let index = matrix[y][x];
                 if (index != -1 && index < least) {
                     least = index;
-                    leastcoord.push(x);
-                    leastcoord.push(y);
+                    leastx = x;
+                    leasty = y;
                     possiable = true;
                 }
             }
         }
         
         if(possiable){
-            matrix[leastcoord[1]][leastcoord[0]] = -1;
-            knightPosition[0] = leastcoord[0];
-            knightPosition[1] = leastcoord[1];
-            console.log(leastcoord[0], leastcoord[1], "at index ", least);
+            matrix[leasty][leastx] = -1;
+            knightPosition[0] = leastx;
+            knightPosition[1] = leasty;
+            console.log(leastx,leasty, "at index ", least);
             possiable = true;
         }
        
     }
 }
 
-knightMovement(spiralMatrix(30));
+knightMovement(spiralMatrix(10));
