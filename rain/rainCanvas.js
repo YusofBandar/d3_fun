@@ -42,7 +42,7 @@ function renderRain(amount = 500, options = {}) {
     
 
     let rainDrops = d3.range(amount).map(function () {
-        zIndex = getRandomArbitrary(0, 10);
+        let zIndex = getRandomArbitrary(0, 10);
         return {
             x: getRandomArbitrary(-10, w),
             y: getRandomArbitrary(-100, -600),
