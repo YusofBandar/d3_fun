@@ -44,17 +44,7 @@ function renderCircles() {
         return ((index + 1) * 80) + 100
     }, w, h);
 
-    for (let x = 0, length = orbitXData.length; x < length; x++) {
-
-        for (let y = 0, length = orbitYData.length; y < length; y++) {
-            let cx = orbits.selectAll(".xaxis").select(`#_${x}`).select(".satellite").attr("cx");
-            let cy = orbits.selectAll(".yaxis").select(`#_${y}`).select(".satellite").attr("cy");
-            pattern.append("circle")
-                .attr("r", 5)
-                .attr("cx", cx)
-                .attr("cy", cy);
-        }
-    }
+    
 
     let t = 0;
     d3.timer(function () {
