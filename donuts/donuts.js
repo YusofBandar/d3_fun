@@ -6,29 +6,29 @@ var dataset = [
     { name: 'Others', percent: 6.01 }
 ];
 
-function sum(accum,curr){
-    if('amount' in curr){
+function sum(accum, curr) {
+    if ('amount' in curr) {
         return accum + curr.amount;
-    }else{
+    } else {
         return accum;
     }
 }
 
-function percent(data){
+function percent(data) {
     var total = Number(this);
-    return Number(((data.amount/total) * 100).toFixed(2));
+    return Number(((data.amount / total) * 100).toFixed(2));
 }
 
-function pushPercent(segement,percents){
-    for(var i=0,n=percents.length;i<n;i++){
+function pushPercent(segement, percents) {
+    for (var i = 0, n = percents.length; i < n; i++) {
         segement.data[i].percent = percents[i]
     }
 }
 
-function prepareData(company){
-    var total = company.data.reduce(sum,0).toFixed(2);
-    var percents = company.data.map(percent,total)
-    pushPercent(company,percents);
+function prepareData(company) {
+    var total = company.data.reduce(sum, 0).toFixed(2);
+    var percents = company.data.map(percent, total)
+    pushPercent(company, percents);
     return company;
 }
 
@@ -70,17 +70,22 @@ function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
         .innerRadius(innerRadius);
 
 
-    var path = svg.selectAll('path')
+
+
+
+    var segements = svg.selectAll('.segement')
         .data(pie(company.data))
         .enter()
-        .append('path')
-        .attr("fill",function(d,i){
-            console.log(d);
+        .append("g")
+        .attr("class", "segement")
+
+    var segArcs = segements.append('path')
+        .attr("fill", function (d, i) {
             return company.colors[i % company.colors.length];
         })
 
 
-    path.transition()
+    segArcs.transition()
         .duration(tranTime)
         .attrTween('d', function (d) {
             var interpolate = d3.interpolate(d.startAngle, d.endAngle);
@@ -88,9 +93,20 @@ function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
                 d.endAngle = interpolate(t);
                 return arc(d);
             };
-        }).delay(function (d, i) {
+        })
+        .delay(function (d, i) {
             return tranTime * i
-        });
+        })
+
+    segements.append("circle")
+        .attr("r", 5)
+        .attr("cx",function(d){
+            return arc.centroid(d)[0];
+        })
+        .attr("cy",function(d){
+            return arc.centroid(d)[1];
+        })
+        .attr("fill", "red")
 }
 
 
