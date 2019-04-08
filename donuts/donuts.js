@@ -34,13 +34,26 @@ var path = svg.selectAll('path')
     .data(pie(dataset))
     .enter()
     .append('path')
+    .attr("id", function (d) {
+        return d.data.name;
+    })
     .attr("d", arc)
+    
 
-path.transition()
+
+
+
+
+svg.select("#Chrome")
+    .attr("fill", "#ff33dd")
+    .transition()
     .duration(1000)
     .attrTween('d', function (d) {
-        var interpolate = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
+        var interpolate = d3.interpolate(d.startAngle, d.endAngle);
         return function (t) {
-            return arc(interpolate(t));
+            d.endAngle = interpolate(t);
+            return arc(d);
         };
     });
+
+
