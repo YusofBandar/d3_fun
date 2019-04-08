@@ -9,3 +9,12 @@ function getRandomArbitrary(min, max) {
 function map (num, in_min, in_max, out_min, out_max){
     return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
+
+function rotate(cx, cy, x, y, angle) {
+    let radians = (Math.PI / 180) * angle,
+        cos = Math.cos(radians),
+        sin = Math.sin(radians),
+        nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+        ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+    return [nx, ny];
+}

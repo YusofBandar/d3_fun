@@ -1,4 +1,28 @@
 .planet{
     fill: none;
-    stroke: black;
+    stroke-width: 3px;
+    
+}
+
+.satellite{
+    fill  : #ffffff;
+}
+
+#circles{
+    position: relative;
+}
+
+#circlesCanvas{
+    position: absolute;
+    top:0;
+    left: 0;
+}
+
+#circlesSvg{
+    background-color: rgb(52, 52, 52);
+}
+
+.line{
+    stroke: rgba(181, 181, 181, 0.476);
+    stroke-dasharray: 3;
 }
