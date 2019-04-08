@@ -1,7 +1,7 @@
 var techCompanies = [
     {
         company: "apple",
-        colors: [],
+        colors: ["#010101","#535557","#636566","#939598","#bcbec0"],
         data: [
             {
                 label: "iphone",

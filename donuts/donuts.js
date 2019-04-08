@@ -74,10 +74,13 @@ function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
         .data(pie(company.data))
         .enter()
         .append('path')
+        .attr("fill",function(d,i){
+            console.log(d);
+            return company.colors[i % company.colors.length];
+        })
 
 
-    path.attr("fill", "#ff33dd")
-        .transition()
+    path.transition()
         .duration(tranTime)
         .attrTween('d', function (d) {
             var interpolate = d3.interpolate(d.startAngle, d.endAngle);
