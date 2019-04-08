@@ -41,9 +41,6 @@ var path = svg.selectAll('path')
     .data(pie(dataset))
     .enter()
     .append('path')
-    .attr("id", function (d) {
-        return d.data.name;
-    })
 
 
 path.attr("fill", "#ff33dd")
