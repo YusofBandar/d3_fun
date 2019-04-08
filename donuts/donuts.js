@@ -25,15 +25,24 @@ function pushPercent(segement,percents){
     }
 }
 
+function prepareData(company){
+    var total = company.data.reduce(sum,0).toFixed(2);
+    var percents = company.data.map(percent,total)
+    pushPercent(company,percents);
+    return company;
+}
 
 
-prepareData(techCompanies[0]);
-//drawDonut(techCompanies[0]);
+
+
+
+drawDonut(techCompanies[0]);
 
 
 
 
-function drawDonut(data, w = 400, h = 400, tranTime = 1000) {
+function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
+    prepareData(company);
     var pie = d3.pie()
         .value(function (d) { return d.percent })
         .sort(null)
@@ -62,7 +71,7 @@ function drawDonut(data, w = 400, h = 400, tranTime = 1000) {
 
 
     var path = svg.selectAll('path')
-        .data(pie(dataset))
+        .data(pie(company.data))
         .enter()
         .append('path')
 
@@ -83,11 +92,6 @@ function drawDonut(data, w = 400, h = 400, tranTime = 1000) {
 
 
 
-function prepareData(segement){
-    var total = segement.data.reduce(sum,0).toFixed(2);
-    var percents = segement.data.map(percent,total)
-    pushPercent(segement,percents);
-}
 
 
 
