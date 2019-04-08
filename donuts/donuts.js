@@ -1,10 +1,3 @@
-var dataset = [
-    { name: 'IE', percent: 39.10 },
-    { name: 'Chrome', percent: 32.51 },
-    { name: 'Safari', percent: 13.68 },
-    { name: 'Firefox', percent: 8.71 },
-    { name: 'Others', percent: 6.01 }
-];
 
 function sum(accum, curr) {
     if ('amount' in curr) {
@@ -57,15 +50,17 @@ function drawDonut(company, w = 800, h = 800, tranTime = 1000) {
 
     var svg = d3.select("#container")
         .append("svg")
-        .attr("class","donut")
+        .attr("class","donut-container")
         .attr("viewBox", `0 0 ${w} ${h}`)
         .attr("width", w)
         .attr("height", h)
-        .append('g')
-        .attr("class", "donut")
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
+        
+
+    var donut = svg.append('g')
+    .attr("class", "donut")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
 
 
     var radius = Math.min(w, h) / 2.5;
@@ -82,7 +77,7 @@ function drawDonut(company, w = 800, h = 800, tranTime = 1000) {
 
 
 
-    var segements = svg.selectAll('.segement')
+    var segements = donut.selectAll('.segement')
         .data(pie(company.data))
         .enter()
         .append("g")
@@ -133,9 +128,11 @@ function drawDonut(company, w = 800, h = 800, tranTime = 1000) {
     .attr("class","company")
     .text(company.company)
     .style('opacity',0)
+    .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
     .transition()
     .duration(tranTime)
     .styleTween("opacity", function () { return d3.interpolate("0", "1"); })
+
     
 
 
