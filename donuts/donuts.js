@@ -98,15 +98,17 @@ function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
             return tranTime * i
         })
 
-    segements.append("circle")
-        .attr("r", 5)
-        .attr("cx",function(d){
+    segements.append("text")
+        .text(function(d){
+            return d.data.label;
+        })
+        .attr("x",function(d){
             return arc.centroid(d)[0];
         })
-        .attr("cy",function(d){
+        .attr("y",function(d){
             return arc.centroid(d)[1];
         })
-        .attr("fill", "red")
+        
 }
 
 
