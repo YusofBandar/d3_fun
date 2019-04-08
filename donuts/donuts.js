@@ -6,55 +6,97 @@ var dataset = [
     { name: 'Others', percent: 6.01 }
 ];
 
-const tranTime = 1000;
+function sum(accum,curr){
+    if('amount' in curr){
+        return accum + curr.amount;
+    }else{
+        return accum;
+    }
+}
 
-var pie = d3.pie()
-    .value(function (d) { return d.percent })
-    .sort(null)
-    .padAngle(.03);
+function percent(data){
+    var total = Number(this);
+    return Number(((data.amount/total) * 100).toFixed(2));
+}
 
-var w = 400, h = 400;
-
-var svg = d3.select("body")
-    .append("svg")
-    .attr("viewBox", `0 0 ${w} ${h}`)
-    .attr("width", w)
-    .attr("height", h)
-    .append('g')
-    .attr("class","donut")
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
-
-
-var segThickness = 20;
-
-var outerRadius = w / 2;
-var innerRadius = outerRadius - segThickness;
-
-var arc = d3.arc()
-    .outerRadius(outerRadius)
-    .innerRadius(innerRadius);
+function pushPercent(segement,percents){
+    for(var i=0,n=percents.length;i<n;i++){
+        segement.data[i].percent = percents[i]
+    }
+}
 
 
-var path = svg.selectAll('path')
-    .data(pie(dataset))
-    .enter()
-    .append('path')
+
+prepareData(techCompanies[0]);
+//drawDonut(techCompanies[0]);
 
 
-path.attr("fill", "#ff33dd")
-    .transition()
-    .duration(tranTime)
-    .attrTween('d', function (d) {
-        var interpolate = d3.interpolate(d.startAngle, d.endAngle);
-        return function (t) {
-            d.endAngle = interpolate(t);
-            return arc(d);
-        };
-    }).delay(function (d, i) {
-        return tranTime * i
-    });
+
+
+function drawDonut(data, w = 400, h = 400, tranTime = 1000) {
+    var pie = d3.pie()
+        .value(function (d) { return d.percent })
+        .sort(null)
+        .padAngle(.03);
+
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("viewBox", `0 0 ${w} ${h}`)
+        .attr("width", w)
+        .attr("height", h)
+        .append('g')
+        .attr("class", "donut")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
+
+
+    var segThickness = 20;
+
+    var outerRadius = w / 2;
+    var innerRadius = outerRadius - segThickness;
+
+    var arc = d3.arc()
+        .outerRadius(outerRadius)
+        .innerRadius(innerRadius);
+
+
+    var path = svg.selectAll('path')
+        .data(pie(dataset))
+        .enter()
+        .append('path')
+
+
+    path.attr("fill", "#ff33dd")
+        .transition()
+        .duration(tranTime)
+        .attrTween('d', function (d) {
+            var interpolate = d3.interpolate(d.startAngle, d.endAngle);
+            return function (t) {
+                d.endAngle = interpolate(t);
+                return arc(d);
+            };
+        }).delay(function (d, i) {
+            return tranTime * i
+        });
+}
+
+
+
+function prepareData(segement){
+    var total = segement.data.reduce(sum,0).toFixed(2);
+    var percents = segement.data.map(percent,total)
+    pushPercent(segement,percents);
+}
+
+
+
+
+
+
+
+
+
 
 
 
