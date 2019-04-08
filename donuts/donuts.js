@@ -55,7 +55,7 @@ function drawDonut(company, w = 800, h = 800, tranTime = 1000) {
         .value(function (d) { return d.percent })
         .sort(null)
 
-    var svg = d3.select("body")
+    var svg = d3.select("#container")
         .append("svg")
         .attr("class","donut")
         .attr("viewBox", `0 0 ${w} ${h}`)
@@ -68,7 +68,7 @@ function drawDonut(company, w = 800, h = 800, tranTime = 1000) {
         .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
 
 
-    var radius = Math.min(w, h) / 2;
+    var radius = Math.min(w, h) / 2.5;
 
     var arc = d3.arc()
         .outerRadius(radius * 0.8)
