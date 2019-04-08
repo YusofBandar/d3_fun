@@ -33,6 +33,9 @@ function prepareData(company) {
 }
 
 
+function midAngle(d) { return d.startAngle + (d.endAngle - d.startAngle) / 2; }
+
+
 
 
 
@@ -41,12 +44,11 @@ drawDonut(techCompanies[0]);
 
 
 
-function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
+function drawDonut(company, w = 800, h = 800, tranTime = 1000) {
     prepareData(company);
     var pie = d3.pie()
         .value(function (d) { return d.percent })
         .sort(null)
-        .padAngle(.03);
 
     var svg = d3.select("body")
         .append("svg")
@@ -60,14 +62,15 @@ function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
         .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
 
 
-    var segThickness = 20;
-
-    var outerRadius = w / 2;
-    var innerRadius = outerRadius - segThickness;
+    var radius = Math.min(w, h) / 2;
 
     var arc = d3.arc()
-        .outerRadius(outerRadius)
-        .innerRadius(innerRadius);
+        .outerRadius(radius * 0.8)
+        .innerRadius(radius * 0.73)
+
+    var labelArc = d3.arc()
+        .outerRadius(radius * 0.85)
+        .innerRadius(radius * 0.85);
 
 
 
@@ -99,16 +102,17 @@ function drawDonut(company, w = 400, h = 400, tranTime = 1000) {
         })
 
     segements.append("text")
-        .text(function(d){
+        .text(function (d) {
             return d.data.label;
         })
-        .attr("x",function(d){
-            return arc.centroid(d)[0];
-        })
-        .attr("y",function(d){
-            return arc.centroid(d)[1];
-        })
-        
+        .attr('transform', function (d) {
+            var pos = labelArc.centroid(d);
+            return 'translate(' + pos + ')';
+        }).style('text-anchor', function (d) {
+            // if slice centre is on the left, anchor text to start, otherwise anchor to end
+            return (midAngle(d)) < Math.PI ? 'start' : 'end';
+        });
+
 }
 
 
