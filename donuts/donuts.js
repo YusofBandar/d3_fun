@@ -6,6 +6,8 @@ var dataset = [
     { name: 'Others', percent: 6.01 }
 ];
 
+const tranTime = 1000;
+
 var pie = d3.pie()
     .value(function (d) { return d.percent })
     .sort(null)
@@ -15,7 +17,6 @@ var w = 300, h = 300;
 
 var outerRadius = w / 2;
 var innerRadius = 100;
-
 
 
 var arc = d3.arc()
@@ -37,23 +38,20 @@ var path = svg.selectAll('path')
     .attr("id", function (d) {
         return d.data.name;
     })
-    .attr("d", arc)
-    
 
 
-
-
-
-svg.select("#Chrome")
-    .attr("fill", "#ff33dd")
+path.attr("fill", "#ff33dd")
     .transition()
-    .duration(1000)
+    .duration(tranTime)
     .attrTween('d', function (d) {
         var interpolate = d3.interpolate(d.startAngle, d.endAngle);
         return function (t) {
             d.endAngle = interpolate(t);
             return arc(d);
         };
+    }).delay(function(d,i){
+        return tranTime * i
     });
+
 
 
