@@ -13,22 +13,28 @@ var pie = d3.pie()
     .sort(null)
     .padAngle(.03);
 
-var w = 300, h = 300;
+var w = 400, h = 400;
+
+var svg = d3.select("body")
+    .append("svg")
+    .attr("viewBox", `0 0 ${w} ${h}`)
+    .attr("width", w)
+    .attr("height", h)
+    .append('g')
+    .attr("class","donut")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
+
+
+var segThickness = 20;
 
 var outerRadius = w / 2;
-var innerRadius = 100;
-
+var innerRadius = outerRadius - segThickness;
 
 var arc = d3.arc()
     .outerRadius(outerRadius)
     .innerRadius(innerRadius);
-
-var svg = d3.select("body")
-    .append("svg")
-    .attr("width", w)
-    .attr("height", h)
-    .append('g')
-    .attr("transform", 'translate(' + w / 2 + ',' + h / 2 + ')')
 
 
 var path = svg.selectAll('path')
@@ -49,7 +55,7 @@ path.attr("fill", "#ff33dd")
             d.endAngle = interpolate(t);
             return arc(d);
         };
-    }).delay(function(d,i){
+    }).delay(function (d, i) {
         return tranTime * i
     });
 
